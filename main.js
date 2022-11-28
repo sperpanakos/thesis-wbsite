@@ -1,25 +1,25 @@
-const localStream;
-const remoteStream;
-const peerConnection;
-const APP_ID="6499a85669b54310bc2ef51bc474ee42"
-const token = null;
-const uid = String(Math.floor(Math.random()*10000))
+ localStream;
+let remoteStream;
+let peerConnection;
+let APP_ID="6499a85669b54310bc2ef51bc474ee42"
+let token = null;
+let uid = String(Math.floor(Math.random()*10000))
 
 
-const client;
-const channel;
+let client;
+let channel;
 
 
-const queryString = window.location.search
-const urlParams =  new URLSearchParams(queryString)
-const roomId = urlParams.get('room')
+let queryString = window.location.search
+let urlParams =  new URLSearchParams(queryString)
+let roomId = urlParams.get('room')
 
 if(!roomId){
     window.location('lobby.html')
 }
 
 
-const servers = {
+let servers = {
     iceServers:[
         {
             urls:['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302']
@@ -28,7 +28,7 @@ const servers = {
 }
 
 
-const init = async () => {
+let init = async () => {
     client = await AgoraRTM.createInstance(APP_ID)
     await client.login({uid, token})
 
@@ -45,7 +45,7 @@ const init = async () => {
     document.getElementById('user-1').srcObject = localStream
 }
 
-const handleMessageFromPeer = async(message,MemberId) =>{
+let handleMessageFromPeer = async(message,MemberId) =>{
     message = JSON.parse(message.text)
     console.log('Message: ',message);
     if(message.type === 'offer'){
@@ -62,17 +62,17 @@ const handleMessageFromPeer = async(message,MemberId) =>{
 
 }
 
-const handleUserLeft = (MemberId)=>{
+let handleUserLeft = (MemberId)=>{
     document.getElementById('user-2').style.display = "none"
 }
 
-const handleUserJoined = async (MemberId) => {
+let handleUserJoined = async (MemberId) => {
     console.log('A new user joined the channel:',MemberId)
     createOffer(MemberId)
 }
 
 
-const createPeerConnection = async (MemberId) => {
+let createPeerConnection = async (MemberId) => {
     peerConnection = new RTCPeerConnection(servers)
 
     remoteStream = new MediaStream()
@@ -101,7 +101,7 @@ const createPeerConnection = async (MemberId) => {
     }
 }
 
-const createOffer = async (MemberId) => {
+let createOffer = async (MemberId) => {
     await createPeerConnection(MemberId)
 
     let offer = await peerConnection.createOffer()
@@ -114,7 +114,7 @@ const createOffer = async (MemberId) => {
 
 
 
-const createAnswer = async (MemberId,offer)=>{
+let createAnswer = async (MemberId,offer)=>{
     await createPeerConnection(MemberId)
     await peerConnection.setRemoteDescription(offer)
 
@@ -126,14 +126,14 @@ const createAnswer = async (MemberId,offer)=>{
 }
 
 
-const addAnswer = async (answer)=>{
+let addAnswer = async (answer)=>{
     if(!peerConnection.currentRemoteDescription){
         peerConnection.setRemoteDescription(answer)
     }
 }
 
 
-const leaveChannel = async ()=>{
+let leaveChannel = async ()=>{
     await channel.leave()
     await client.logout()
 }
