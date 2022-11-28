@@ -1,15 +1,12 @@
- localStream;
+let localStream;
 let remoteStream;
 let peerConnection;
 let APP_ID="6499a85669b54310bc2ef51bc474ee42"
 let token = null;
-let uid = String(Math.floor(Math.random()*10000))
-
+let uid = String(Math.floor(Math.random()*100))
 
 let client;
-let channel;
-
-
+let chanlet
 let queryString = window.location.search
 let urlParams =  new URLSearchParams(queryString)
 let roomId = urlParams.get('room')
@@ -19,7 +16,7 @@ if(!roomId){
 }
 
 
-let servers = {
+const servers = {
     iceServers:[
         {
             urls:['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302']
