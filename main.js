@@ -1,18 +1,18 @@
-let localStream;
-let remoteStream;
-let peerConnection;
-let APP_ID="6499a85669b54310bc2ef51bc474ee42"
-let token = null;
-let uid = String(Math.floor(Math.random()*10000))
+const localStream;
+const remoteStream;
+const peerConnection;
+const APP_ID="6499a85669b54310bc2ef51bc474ee42"
+const token = null;
+const uid = String(Math.floor(Math.random()*10000))
 
 
-let client;
-let channel;
+const client;
+const channel;
 
 
-let queryString = window.location.search
-let urlParams =  new URLSearchParams(queryString)
-let roomId = urlParams.get('room')
+const queryString = window.location.search
+const urlParams =  new URLSearchParams(queryString)
+const roomId = urlParams.get('room')
 
 if(!roomId){
     window.location('lobby.html')
@@ -28,7 +28,7 @@ const servers = {
 }
 
 
-let init = async () => {
+const init = async () => {
     client = await AgoraRTM.createInstance(APP_ID)
     await client.login({uid, token})
 
@@ -45,7 +45,7 @@ let init = async () => {
     document.getElementById('user-1').srcObject = localStream
 }
 
-let handleMessageFromPeer = async(message,MemberId) =>{
+const handleMessageFromPeer = async(message,MemberId) =>{
     message = JSON.parse(message.text)
     console.log('Message: ',message);
     if(message.type === 'offer'){
@@ -62,17 +62,17 @@ let handleMessageFromPeer = async(message,MemberId) =>{
 
 }
 
-let handleUserLeft = (MemberId)=>{
+const handleUserLeft = (MemberId)=>{
     document.getElementById('user-2').style.display = "none"
 }
 
-let handleUserJoined = async (MemberId) => {
+const handleUserJoined = async (MemberId) => {
     console.log('A new user joined the channel:',MemberId)
     createOffer(MemberId)
 }
 
 
-let createPeerConnection = async (MemberId) => {
+const createPeerConnection = async (MemberId) => {
     peerConnection = new RTCPeerConnection(servers)
 
     remoteStream = new MediaStream()
@@ -101,7 +101,7 @@ let createPeerConnection = async (MemberId) => {
     }
 }
 
-let createOffer = async (MemberId) => {
+const createOffer = async (MemberId) => {
     await createPeerConnection(MemberId)
 
     let offer = await peerConnection.createOffer()
@@ -114,7 +114,7 @@ let createOffer = async (MemberId) => {
 
 
 
-let createAnswer = async (MemberId,offer)=>{
+const createAnswer = async (MemberId,offer)=>{
     await createPeerConnection(MemberId)
     await peerConnection.setRemoteDescription(offer)
 
@@ -126,14 +126,14 @@ let createAnswer = async (MemberId,offer)=>{
 }
 
 
-let addAnswer = async (answer)=>{
+const addAnswer = async (answer)=>{
     if(!peerConnection.currentRemoteDescription){
         peerConnection.setRemoteDescription(answer)
     }
 }
 
 
-let leaveChannel = async ()=>{
+const leaveChannel = async ()=>{
     await channel.leave()
     await client.logout()
 }
